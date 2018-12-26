@@ -3,6 +3,7 @@
 from telegram.ext import Updater, CommandHandler
 from weather import Weather, Unit
 import config
+import telegram
 
 weather = Weather(unit=Unit.CELSIUS)
 
@@ -17,13 +18,13 @@ def get_weather():
 
 
 def get_forecast():
-    values = ()
+    forecasts_list = []
     forecasts = location.forecast
-    for forecast in forecasts[:2]:
-        values.append("""{}
+    for forecast in forecasts[:3]:
+        forecasts_list.append("""{}
                 Max/Min: {}/{}
                 Summary: {}""".format(forecast.date, forecast.high, forecast.low, forecast.text))
-    return values
+    return "\n".join(forecasts_list)
 
 
 def start(bot, update):
@@ -34,9 +35,9 @@ def weather(bot, update):
     update.message.reply_text(get_weather())
 
 
-# TODO is not working yet
 def forecast(bot, update):
-    update.message.reply_text(get_forecast)
+    bot.send_message(chat_id=update.message.chat_id, text=get_forecast(),
+                     parse_mode=telegram.ParseMode.HTML)
 
 
 def help(bot, update):
