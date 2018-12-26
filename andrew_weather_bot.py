@@ -2,7 +2,6 @@
 
 from telegram.ext import Updater, CommandHandler
 from weather import Weather, Unit
-import config
 import telegram
 import os
 
