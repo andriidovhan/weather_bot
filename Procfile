@@ -1,1 +1,1 @@
-web: python andrew_weather_bot.py
+worker: python andrew_weather_bot.py
