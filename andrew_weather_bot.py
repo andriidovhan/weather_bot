@@ -15,9 +15,9 @@ def get_weather(city):
     "Summary: {}""".format(condition.date, condition.temp, condition.text))
 
 
-def get_forecast():
+def get_forecast(city):
     weather = Weather(unit=Unit.CELSIUS)
-    location = weather.lookup_by_location('kharkiv')
+    location = weather.lookup_by_location(city)
     forecasts_list = []
     forecasts = location.forecast
     for forecast in forecasts[:3]:
@@ -37,8 +37,9 @@ def weather(bot, update, args=[]):
     update.message.reply_text(get_weather(city))
 
 
-def forecast(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text=get_forecast(),
+def forecast(bot, update, args=[]):
+    city = args[0] if bool(args) else 'kharkiv'
+    bot.send_message(chat_id=update.message.chat_id, text=get_forecast(city),
                      parse_mode=telegram.ParseMode.HTML)
 
 
@@ -63,7 +64,7 @@ def main():
     weather_handler = CommandHandler('weather', weather, pass_args=True)
     dispatcher.add_handler(weather_handler)
 
-    forecast_handler = CommandHandler('forecast', forecast)
+    forecast_handler = CommandHandler('forecast', forecast, pass_args=True)
     dispatcher.add_handler(forecast_handler)
 
     # Start the bot
