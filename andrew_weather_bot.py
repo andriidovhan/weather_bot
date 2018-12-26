@@ -5,19 +5,19 @@ from weather import Weather, Unit
 import config
 import telegram
 
-weather = Weather(unit=Unit.CELSIUS)
 
-location = weather.lookup_by_location('kharkiv')
-condition = location.condition
-
-
-def get_weather():
+def get_weather(city):
+    weather = Weather(unit=Unit.CELSIUS)
+    location = weather.lookup_by_location(city)
+    condition = location.condition
     return ("""Today is: {},
     "Current temp: {},
     "Summary: {}""".format(condition.date, condition.temp, condition.text))
 
 
 def get_forecast():
+    weather = Weather(unit=Unit.CELSIUS)
+    location = weather.lookup_by_location('kharkiv')
     forecasts_list = []
     forecasts = location.forecast
     for forecast in forecasts[:3]:
@@ -31,8 +31,10 @@ def start(bot, update):
     update.message.reply_text("I'm a weather bot.")
 
 
-def weather(bot, update):
-    update.message.reply_text(get_weather())
+def weather(bot, update, args=[]):
+    # set default value
+    city = args[0] if bool(args) else 'kharkiv'
+    update.message.reply_text(get_weather(city))
 
 
 def forecast(bot, update):
@@ -58,7 +60,7 @@ def main():
     start_handler = CommandHandler('start', start)
     dispatcher.add_handler(start_handler)
 
-    weather_handler = CommandHandler('weather', weather)
+    weather_handler = CommandHandler('weather', weather, pass_args=True)
     dispatcher.add_handler(weather_handler)
 
     forecast_handler = CommandHandler('forecast', forecast)
