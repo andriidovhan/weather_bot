@@ -6,9 +6,11 @@ import config
 import telegram
 
 
+WEATHER = Weather(unit=Unit.CELSIUS)
+
+
 def get_weather(city):
-    weather = Weather(unit=Unit.CELSIUS)
-    location = weather.lookup_by_location(city)
+    location = WEATHER.lookup_by_location(city)
     condition = location.condition
     return ("""Today is: {},
     "Current temp: {},
@@ -16,8 +18,7 @@ def get_weather(city):
 
 
 def get_forecast(city):
-    weather = Weather(unit=Unit.CELSIUS)
-    location = weather.lookup_by_location(city)
+    location = WEATHER.lookup_by_location(city)
     forecasts_list = []
     forecasts = location.forecast
     for forecast in forecasts[:3]:
