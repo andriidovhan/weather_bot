@@ -2,9 +2,8 @@
 
 from telegram.ext import Updater, CommandHandler
 from weather import Weather, Unit
-import config
 import telegram
-
+import os
 
 WEATHER = Weather(unit=Unit.CELSIUS)
 
@@ -52,7 +51,7 @@ def help(bot, update):
 
 def main():
     # Create Updater object and attach dispatcher to it
-    updater = Updater(config.TOKEN)
+    updater = Updater(os.environ.get('TOKEN'))
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler('help', help))
