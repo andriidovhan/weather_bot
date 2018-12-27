@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from telegram.ext import Updater, CommandHandler
+from telegram.ext import Updater, CommandHandler, Filters, MessageHandler
 from weather import Weather, Unit
 import telegram
 import os
@@ -49,6 +49,10 @@ def help(bot, update):
     update.message.reply_text(custom_commands)
 
 
+def unknown(bot, update):
+    update.message.reply_text("Sorry, I don't know that command.")
+
+
 def main():
     # Create Updater object and attach dispatcher to it
     updater = Updater(os.environ.get('TOKEN'))
@@ -61,6 +65,7 @@ def main():
     dispatcher.add_handler(CommandHandler('help', help))
     dispatcher.add_handler(CommandHandler('weather', weather, pass_args=True))
     dispatcher.add_handler(CommandHandler('forecast', forecast, pass_args=True))
+    dispatcher.add_handler(MessageHandler(Filters.command, unknown))
 
     # Start the bot
     updater.start_polling()
