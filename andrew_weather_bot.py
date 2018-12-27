@@ -59,8 +59,8 @@ def unknown(bot, update):
     logger.warning("Unknown command is entered: '{}' by '{}'.".format(update.message['text'], update.message['chat']['username']))
     update.message.reply_text("Sorry, I don't know that command.")
 
+
 def inlinequery(bot, update):
-    query = update.inline_query.query
     results = [
         InlineQueryResultArticle(
             id=uuid4(),
@@ -74,6 +74,10 @@ def inlinequery(bot, update):
                 get_forecast('kharkiv')))]
 
     update.inline_query.answer(results)
+
+def error(bot, update, error):
+    """Log Errors caused by Updates."""
+    logger.warning('Update "%s" caused error "%s"', update, error)
 
 def main():
     # Create Updater object and attach dispatcher to it
@@ -89,6 +93,10 @@ def main():
     dispatcher.add_handler(CommandHandler('forecast', forecast, pass_args=True))
     dispatcher.add_handler(MessageHandler(Filters.command, unknown))
     dispatcher.add_handler(InlineQueryHandler(inlinequery))
+
+    # log all errors
+    dispatcher.add_error_handler(error)
+
     # Start the bot
     updater.start_polling()
 
