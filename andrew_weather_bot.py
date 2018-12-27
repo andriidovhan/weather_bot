@@ -4,6 +4,10 @@ from telegram.ext import Updater, CommandHandler, Filters, MessageHandler
 from weather import Weather, Unit
 import telegram
 import os
+import logging
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 WEATHER = Weather(unit=Unit.CELSIUS)
 
@@ -50,6 +54,7 @@ def help(bot, update):
 
 
 def unknown(bot, update):
+    logger.warning("Unknown command is entered: '{}' by '{}'.".format(update.message['text'], update.message['chat']['username']))
     update.message.reply_text("Sorry, I don't know that command.")
 
 
