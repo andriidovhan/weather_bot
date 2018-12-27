@@ -54,18 +54,13 @@ def main():
     updater = Updater(os.environ.get('TOKEN'))
     dispatcher = updater.dispatcher
 
-    dispatcher.add_handler(CommandHandler('help', help))
     print("Bot started")
 
     # Add command handler to dispatcher
-    start_handler = CommandHandler('start', start)
-    dispatcher.add_handler(start_handler)
-
-    weather_handler = CommandHandler('weather', weather, pass_args=True)
-    dispatcher.add_handler(weather_handler)
-
-    forecast_handler = CommandHandler('forecast', forecast, pass_args=True)
-    dispatcher.add_handler(forecast_handler)
+    dispatcher.add_handler(CommandHandler('start', start))
+    dispatcher.add_handler(CommandHandler('help', help))
+    dispatcher.add_handler(CommandHandler('weather', weather, pass_args=True))
+    dispatcher.add_handler(CommandHandler('forecast', forecast, pass_args=True))
 
     # Start the bot
     updater.start_polling()
