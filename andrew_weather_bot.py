@@ -40,11 +40,13 @@ def start(bot, update):
 def weather(bot, update, args=[]):
     # set default value
     city = args[0] if bool(args) else 'kharkiv'
+    logger.info(" Get weather for '{}' city.".format(city))
     update.message.reply_text(get_weather(city))
 
 
 def forecast(bot, update, args=[]):
     city = args[0] if bool(args) else 'kharkiv'
+    logger.info(" Get forecast for '{}' city.".format(city))
     bot.send_message(chat_id=update.message.chat_id, text=get_forecast(city),
                      parse_mode=telegram.ParseMode.HTML)
 
@@ -76,7 +78,6 @@ def inlinequery(bot, update):
     update.inline_query.answer(results)
 
 def error(bot, update, error):
-    """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 def main():
