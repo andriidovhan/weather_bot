@@ -1,6 +1,8 @@
 #!/usr/bin/env python
+from uuid import uuid4
 
-from telegram.ext import Updater, CommandHandler, Filters, MessageHandler
+from telegram import InlineQueryResultArticle, InputTextMessageContent
+from telegram.ext import Updater, CommandHandler, Filters, MessageHandler, InlineQueryHandler
 from weather import Weather, Unit
 import telegram
 import os
@@ -15,9 +17,9 @@ WEATHER = Weather(unit=Unit.CELSIUS)
 def get_weather(city):
     location = WEATHER.lookup_by_location(city)
     condition = location.condition
-    return ("""Today is: {},
+    return ("""{}: {},
     "Current temp: {},
-    "Summary: {}""".format(condition.date, condition.temp, condition.text))
+    "Summary: {}""".format(city, condition.date, condition.temp, condition.text))
 
 
 def get_forecast(city):
@@ -25,9 +27,9 @@ def get_forecast(city):
     forecasts_list = []
     forecasts = location.forecast
     for forecast in forecasts[:3]:
-        forecasts_list.append("""{}
+        forecasts_list.append("""{}: {}
                 Max/Min: {}/{}
-                Summary: {}""".format(forecast.date, forecast.high, forecast.low, forecast.text))
+                Summary: {}""".format(city, forecast.date, forecast.high, forecast.low, forecast.text))
     return "\n".join(forecasts_list)
 
 
@@ -57,6 +59,21 @@ def unknown(bot, update):
     logger.warning("Unknown command is entered: '{}' by '{}'.".format(update.message['text'], update.message['chat']['username']))
     update.message.reply_text("Sorry, I don't know that command.")
 
+def inlinequery(bot, update):
+    query = update.inline_query.query
+    results = [
+        InlineQueryResultArticle(
+            id=uuid4(),
+            title="share_weather",
+            input_message_content=InputTextMessageContent(
+                get_weather('kharkiv'))),
+        InlineQueryResultArticle(
+            id=uuid4(),
+            title="share_forecast",
+            input_message_content=InputTextMessageContent(
+                get_forecast('kharkiv')))]
+
+    update.inline_query.answer(results)
 
 def main():
     # Create Updater object and attach dispatcher to it
@@ -71,7 +88,7 @@ def main():
     dispatcher.add_handler(CommandHandler('weather', weather, pass_args=True))
     dispatcher.add_handler(CommandHandler('forecast', forecast, pass_args=True))
     dispatcher.add_handler(MessageHandler(Filters.command, unknown))
-
+    dispatcher.add_handler(InlineQueryHandler(inlinequery))
     # Start the bot
     updater.start_polling()
 
