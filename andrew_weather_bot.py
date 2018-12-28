@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from uuid import uuid4
 
 from telegram import InlineQueryResultArticle, InputTextMessageContent
@@ -17,19 +19,16 @@ WEATHER = Weather(unit=Unit.CELSIUS)
 def get_weather(city):
     location = WEATHER.lookup_by_location(city)
     condition = location.condition
-    return ("""{}: {},
-    "Current temp: {},
-    "Summary: {}""".format(city, condition.date, condition.temp, condition.text))
+    return """temp: {}, {}""".format(condition.temp, condition.text)
 
 
 def get_forecast(city):
     location = WEATHER.lookup_by_location(city)
     forecasts_list = []
     forecasts = location.forecast
-    for forecast in forecasts[:3]:
-        forecasts_list.append("""{}: {}
-                Max/Min: {}/{}
-                Summary: {}""".format(city, forecast.date, forecast.high, forecast.low, forecast.text))
+    for forecast in forecasts[1:6]:
+        forecasts_list.append("""{}
+                Max/Min: {}/{}, {}""".format(forecast.date, forecast.high, forecast.low, forecast.text))
     return "\n".join(forecasts_list)
 
 
@@ -41,13 +40,13 @@ def weather(bot, update, args=[]):
     # set default value
     city = args[0] if bool(args) else 'kharkiv'
     logger.info(" Get weather for '{}' city.".format(city))
-    update.message.reply_text(get_weather(city))
+    update.message.reply_text("=== {} ==\n {}".format(city,get_weather(city)))
 
 
 def forecast(bot, update, args=[]):
     city = args[0] if bool(args) else 'kharkiv'
     logger.info(" Get forecast for '{}' city.".format(city))
-    bot.send_message(chat_id=update.message.chat_id, text=get_forecast(city),
+    bot.send_message(chat_id=update.message.chat_id, text="=== {} ==\n {}".format(city, get_forecast(city)),
                      parse_mode=telegram.ParseMode.HTML)
 
 
@@ -77,8 +76,10 @@ def inlinequery(bot, update):
 
     update.inline_query.answer(results)
 
+
 def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
+
 
 def main():
     # Create Updater object and attach dispatcher to it
