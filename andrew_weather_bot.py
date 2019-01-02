@@ -58,8 +58,8 @@ def help(bot, update):
     update.message.reply_text(custom_commands)
 
 
-def rate(bot, update):
-    update.message.reply_text(currency_rate.get_rate())
+def rate(bot, update, args=[]):
+    update.message.reply_text(currency_rate.get_rate(args))
 
 
 def unknown(bot, update):
@@ -99,7 +99,7 @@ def main():
     dispatcher.add_handler(CommandHandler('help', help))
     dispatcher.add_handler(CommandHandler('weather', weather, pass_args=True))
     dispatcher.add_handler(CommandHandler('forecast', forecast, pass_args=True))
-    dispatcher.add_handler(CommandHandler('rate', rate))
+    dispatcher.add_handler(CommandHandler('rate', rate, pass_args=True))
     dispatcher.add_handler(MessageHandler(Filters.command, unknown))
     dispatcher.add_handler(InlineQueryHandler(inlinequery))
 
