@@ -9,6 +9,7 @@ from weather import Weather, Unit
 import telegram
 import os
 import logging
+import currency_rate
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -41,6 +42,7 @@ def weather(bot, update, args=[]):
     city = args[0] if bool(args) else 'kharkiv'
     logger.info(" Get weather for '{}' city.".format(city))
     update.message.reply_text("=== {} ==\n {}".format(city,get_weather(city)))
+    bot.send_photo(chat_id=update.message.chat_id, photo='https://cdn2.iconfinder.com/data/icons/wthr/32/cloudy-512.png')
 
 
 def forecast(bot, update, args=[]):
@@ -52,8 +54,12 @@ def forecast(bot, update, args=[]):
 
 def help(bot, update):
     # custom_commands = ["/start", "/get_weather", "/forecast", "/help"]
-    custom_commands = """/start\n/weather\n/forecast\n/help"""
+    custom_commands = """/start\n/weather\n/forecast\n/rate\n/help"""
     update.message.reply_text(custom_commands)
+
+
+def rate(bot, update):
+    update.message.reply_text(currency_rate.get_rate())
 
 
 def unknown(bot, update):
@@ -93,6 +99,7 @@ def main():
     dispatcher.add_handler(CommandHandler('help', help))
     dispatcher.add_handler(CommandHandler('weather', weather, pass_args=True))
     dispatcher.add_handler(CommandHandler('forecast', forecast, pass_args=True))
+    dispatcher.add_handler(CommandHandler('rate', rate))
     dispatcher.add_handler(MessageHandler(Filters.command, unknown))
     dispatcher.add_handler(InlineQueryHandler(inlinequery))
 
