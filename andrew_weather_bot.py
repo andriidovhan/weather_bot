@@ -71,7 +71,7 @@ def inlinequery(bot, update):
             id=uuid4(),
             title="share_forecast",
             input_message_content=InputTextMessageContent(
-                weather_instanse.get_current_weather()))]
+                weather_instanse.get_forecast()))]
 
     update.inline_query.answer(results)
 
