@@ -3,7 +3,6 @@
 
 import requests
 
-#TODO use https://market.mashape.com/dontgiveafish/hryvna-today instead of the following link
 URL = 'http://bank-ua.com/export/exchange_rate_cash.json'
 
 
