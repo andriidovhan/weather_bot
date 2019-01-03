@@ -22,9 +22,9 @@ def get_rate(currency=[]):
     for resp in response:
         if resp['codeAlpha'] == c.upper():
             count += 1
-            rate_buy += round(float(resp['rateBuy']), 2)
-            rate_sale += round(float(resp['rateSale']), 2)
+            rate_buy += float(resp['rateBuy'])
+            rate_sale += float(resp['rateSale'])
 
-    av_rate_buy = rate_buy/count
-    av_rate_sale = rate_sale/count
+    av_rate_buy = round(rate_buy/count, 2)
+    av_rate_sale = round(rate_sale/count, 2)
     return "{}: {}/{}".format(c, av_rate_buy, av_rate_sale)
