@@ -43,7 +43,7 @@ def weather(bot, update, args=[]):
     city = args[0] if bool(args) else 'kharkiv'
     logger.info(" Get weather for '{}' city.".format(city))
     update.message.reply_text("=== {} ==\n {}".format(city,get_weather(city)))
-    bot.send_photo(chat_id=update.message.chat_id, photo='https://cdn2.iconfinder.com/data/icons/wthr/32/cloudy-512.png')
+    # bot.send_photo(chat_id=update.message.chat_id, photo='https://cdn2.iconfinder.com/data/icons/wthr/32/cloudy-512.png')
 
 
 def forecast(bot, update, args=[]):
