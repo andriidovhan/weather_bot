@@ -7,12 +7,10 @@ enum34==1.1.6
 future==0.17.1
 idna==2.8
 ipaddress==1.0.22
-# poster==0.8.1 this package was added when the hryvna_today file was completed
 pycparser==2.19
 python-telegram-bot==11.1.0
 requests==2.21.0
 six==1.12.0
 telegram==0.0.1
-Unirest==1.1.7
 urllib3==1.24.1
 weather-api==1.0.6

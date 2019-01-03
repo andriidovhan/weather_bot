@@ -1,5 +1,5 @@
 
 config.py
-config.pyc
+*.pyc
 .idea/
 env/

@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-import unirest as unirest
 import datetime
 import os
+import requests
 
 
 CURRENT_DATE = datetime.datetime.now()  # type: datetime
@@ -12,13 +12,12 @@ URL = 'https://hryvna-today.p.mashape.com/v1/rates/averages'
 
 
 def init_request():
-    response = unirest.get(URL,
+    response = requests.get(URL,
                            headers={
                                "X-Mashape-Key": os.environ.get('TOKEN_HRYVNA_TODAY'),
                                "Accept": "application/json"
                            })
-    return response.body
-
+    return response.json()
 
 def get_rate(currency=[]):
     # USD = 840, EUR = 978
